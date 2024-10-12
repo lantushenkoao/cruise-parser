@@ -32,7 +32,7 @@ public class Main {
         List<String> urls = Arrays.asList(
                 "https://volgawolga.ru/mayakovskiy/");
         //использовать это для конвертации русского текста https://r12a.github.io/app-conversion/
-        String shipName = "\u0412\u043B\u0430\u0434\u0438\u043C\u0438\u0440 \u041C\u0430\u044F\u043A\u043E\u0432\u0441\u043A\u0438\u0439";
+        String shipName = "Владимир Маяковский";
 
         parseVolgaVolgaCruises(shipName, urls);
 

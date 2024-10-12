@@ -58,12 +58,12 @@ public class VolgaVolgaParser {
     private static void loadDates(List<VolgaVolgaData> data, WebDriver driver) throws Exception {
         for (VolgaVolgaData row: data){
             driver.get(row.link);
-            String startDate = driver.findElement(By.xpath("//*[contains(text(), 'Отправление теплохода:')]/..")).getText();
-            startDate = startDate.replace("Отправление теплохода:", "").trim();
+            String startDate = driver.findElement(By.xpath("//*[contains(text(), 'РћС‚РїСЂР°РІР»РµРЅРёРµ С‚РµРїР»РѕС…РѕРґР°:')]/..")).getText();
+            startDate = startDate.replace("РћС‚РїСЂР°РІР»РµРЅРёРµ С‚РµРїР»РѕС…РѕРґР°:", "").trim();
             row.startDate = parseDate(startDate);
 
-            String endDate = driver.findElement(By.xpath("//*[contains(text(), 'Прибытие теплохода:')]/..")).getText();
-            endDate = endDate.replace("Прибытие теплохода:", "").trim();
+            String endDate = driver.findElement(By.xpath("//*[contains(text(), 'РџСЂРёР±С‹С‚РёРµ С‚РµРїР»РѕС…РѕРґР°:')]/..")).getText();
+            endDate = endDate.replace("РџСЂРёР±С‹С‚РёРµ С‚РµРїР»РѕС…РѕРґР°:", "").trim();
             row.endDate = parseDate(endDate);
 
             System.out.println(startDate + " - " + endDate);
@@ -96,7 +96,7 @@ public class VolgaVolgaParser {
     }
     private static Date parseDate(String date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        String dateTrimmed = date.substring(0, date.indexOf("г.") - 1);
+        String dateTrimmed = date.substring(0, date.indexOf("Рі.") - 1);
         return format.parse(dateTrimmed);
     }
 }
