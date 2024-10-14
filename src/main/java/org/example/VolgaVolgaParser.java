@@ -47,7 +47,7 @@ public class VolgaVolgaParser {
                     data.add(dataRow);
                 }
             }
-            loadDates(data, driver);
+            loadCruiseData(data, driver);
             writeToFile(data);
         }finally {
 
@@ -55,18 +55,29 @@ public class VolgaVolgaParser {
         }
     }
 
-    private static void loadDates(List<VolgaVolgaData> data, WebDriver driver) throws Exception {
-        for (VolgaVolgaData row: data){
+    private static void loadCruiseData(List<VolgaVolgaData> rows, WebDriver driver) throws Exception {
+        for (VolgaVolgaData row: rows){
             driver.get(row.link);
-            String startDate = driver.findElement(By.xpath("//*[contains(text(), 'Отправление теплохода:')]/..")).getText();
-            startDate = startDate.replace("Отправление теплохода:", "").trim();
-            row.startDate = parseDate(startDate);
+            try {
+                String startDate = driver.findElement(By.xpath("//*[contains(text(), 'Отправление теплохода:')]/..")).getText();
+                startDate = startDate.replace("Отправление теплохода:", "").trim();
+                row.startDate = parseDate(startDate);
 
-            String endDate = driver.findElement(By.xpath("//*[contains(text(), 'Прибытие теплохода:')]/..")).getText();
-            endDate = endDate.replace("Прибытие теплохода:", "").trim();
-            row.endDate = parseDate(endDate);
+                String endDate = driver.findElement(By.xpath("//*[contains(text(), 'Прибытие теплохода:')]/..")).getText();
+                endDate = endDate.replace("Прибытие теплохода:", "").trim();
+                row.endDate = parseDate(endDate);
 
-            System.out.println(startDate + " - " + endDate);
+                System.out.println(startDate + " - " + endDate);
+                List<WebElement> cities = driver.findElements(By.xpath("//*[contains(@class,\"active\")]//table[1]//td[4]"));
+//          //*[contains(@class,"active")]//table[1]//td[4]
+                String citiesFin = "";
+                for (WebElement city : cities) {
+                    citiesFin += city.getText() + "_";
+                }
+                row.cities = citiesFin.substring(0, citiesFin.length() - 1);
+            }catch (Exception e) {
+                System.out.println("Failed to load trip: " + row.link);
+            }
         }
     }
 
@@ -78,7 +89,7 @@ public class VolgaVolgaParser {
             for(VolgaVolgaData row: data) {
                 textFile.write(row.shipName + "\t" + format.format(row.startDate)
                         + "\t" + format.format(row.endDate)
-                        + "\t" + row.stops
+                        + "\t" + row.cities
                         + "\t" + row.link
                         + "\n");
             }
@@ -93,6 +104,7 @@ public class VolgaVolgaParser {
         public String link;
         public Date startDate;
         public Date endDate;
+        public String cities;
     }
     private static Date parseDate(String date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");

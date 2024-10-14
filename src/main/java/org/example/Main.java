@@ -30,9 +30,9 @@ public class Main {
 //        parseMosturflotCruises("Леонид КРАСИН", urls);
 
         List<String> urls = Arrays.asList(
-                "https://volgawolga.ru/mayakovskiy/");
+                "https://volgawolga.ru/yurij-nikulin/");
         //использовать это для конвертации русского текста https://r12a.github.io/app-conversion/
-        String shipName = "Владимир Маяковский";
+        String shipName = "Юрий Никулин";
 
         parseVolgaVolgaCruises(shipName, urls);
 
