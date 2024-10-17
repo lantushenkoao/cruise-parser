@@ -27,12 +27,12 @@ public class Main {
     public static void main(String[] args) throws Exception {
 //        List<String> urls = Arrays.asList(
 //                "https://www.mosturflot.ru/river-cruises/?ship_id=14&date_from=01.01.2025");
-//        parseMosturflotCruises("Р›РµРѕРЅРёРґ РљР РђРЎРРќ", urls);
+//        parseMosturflotCruises("Леонид КРАСИН", urls);
 
         List<String> urls = Arrays.asList(
-                "https://volgawolga.ru/yurij-nikulin/");
-        //РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЌС‚Рѕ РґР»СЏ РєРѕРЅРІРµСЂС‚Р°С†РёРё СЂСѓСЃСЃРєРѕРіРѕ С‚РµРєСЃС‚Р° https://r12a.github.io/app-conversion/
-        String shipName = "Р®СЂРёР№ РќРёРєСѓР»РёРЅ";
+                "https://volgawolga.ru/kutuzov/");
+        //использовать это для конвертации русского текста https://r12a.github.io/app-conversion/
+        String shipName = "Михаил Кутузов";
 
         parseVolgaVolgaCruises(shipName, urls);
 

@@ -59,12 +59,12 @@ public class VolgaVolgaParser {
         for (VolgaVolgaData row: rows){
             driver.get(row.link);
             try {
-                String startDate = driver.findElement(By.xpath("//*[contains(text(), 'РћС‚РїСЂР°РІР»РµРЅРёРµ С‚РµРїР»РѕС…РѕРґР°:')]/..")).getText();
-                startDate = startDate.replace("РћС‚РїСЂР°РІР»РµРЅРёРµ С‚РµРїР»РѕС…РѕРґР°:", "").trim();
+                String startDate = driver.findElement(By.xpath("//*[contains(text(), 'Отправление теплохода:')]/..")).getText();
+                startDate = startDate.replace("Отправление теплохода:", "").trim();
                 row.startDate = parseDate(startDate);
 
-                String endDate = driver.findElement(By.xpath("//*[contains(text(), 'РџСЂРёР±С‹С‚РёРµ С‚РµРїР»РѕС…РѕРґР°:')]/..")).getText();
-                endDate = endDate.replace("РџСЂРёР±С‹С‚РёРµ С‚РµРїР»РѕС…РѕРґР°:", "").trim();
+                String endDate = driver.findElement(By.xpath("//*[contains(text(), 'Прибытие теплохода:')]/..")).getText();
+                endDate = endDate.replace("Прибытие теплохода:", "").trim();
                 row.endDate = parseDate(endDate);
 
                 System.out.println(startDate + " - " + endDate);
@@ -77,6 +77,7 @@ public class VolgaVolgaParser {
                 row.cities = citiesFin.substring(0, citiesFin.length() - 1);
             }catch (Exception e) {
                 System.out.println("Failed to load trip: " + row.link);
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
@@ -87,8 +88,8 @@ public class VolgaVolgaParser {
             SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
             for(VolgaVolgaData row: data) {
-                textFile.write(row.shipName + "\t" + format.format(row.startDate)
-                        + "\t" + format.format(row.endDate)
+                textFile.write(row.shipName + "\t" + (null == row.startDate ? "пусто" : format.format(row.startDate))
+                        + "\t" + (null == row.endDate ? "пусто" : format.format(row.endDate))
                         + "\t" + row.cities
                         + "\t" + row.link
                         + "\n");
@@ -108,7 +109,7 @@ public class VolgaVolgaParser {
     }
     private static Date parseDate(String date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        String dateTrimmed = date.substring(0, date.indexOf("Рі.") - 1);
+        String dateTrimmed = date.substring(0, date.indexOf("г.") - 1);
         return format.parse(dateTrimmed);
     }
 }
