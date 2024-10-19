@@ -1,25 +1,6 @@
 package org.example;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.io.FileWriter;
-import java.util.Locale;
-
-import static org.example.MosturflotParser.parseMosturflotCruises;
-import static org.example.SeleniumUtils.clickButtonIfVisible;
-import static org.example.SeleniumUtils.isElementVisible;
-import static org.example.VolgaVolgaParser.parseVolgaVolgaCruises;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -27,14 +8,32 @@ public class Main {
     public static void main(String[] args) throws Exception {
 //        List<String> urls = Arrays.asList(
 //                "https://www.mosturflot.ru/river-cruises/?ship_id=14&date_from=01.01.2025");
-//        parseMosturflotCruises("Р›РµРѕРЅРёРґ РљР РђРЎРРќ", urls);
+//        parseMosturflotCruises("Леонид КРАСИН", urls);
 
-        List<String> urls = Arrays.asList(
-                "https://volgawolga.ru/yurij-nikulin/");
-        //РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЌС‚Рѕ РґР»СЏ РєРѕРЅРІРµСЂС‚Р°С†РёРё СЂСѓСЃСЃРєРѕРіРѕ С‚РµРєСЃС‚Р° https://r12a.github.io/app-conversion/
-        String shipName = "Р®СЂРёР№ РќРёРєСѓР»РёРЅ";
+//        List<String> urls = Arrays.asList(
+//                "https://volgawolga.ru/kutuzov/");
+//        //использовать это для конвертации русского текста https://r12a.github.io/app-conversion/
+//        String shipName = "Михаил Кутузов";
+//
+//        parseVolgaVolgaCruises(shipName, urls);
 
-        parseVolgaVolgaCruises(shipName, urls);
-
+        ConstellationParser.parseCruises(Arrays.asList(
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/Rossia_/", "Россия"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/ogni_bolshogo_goroda/", "Огни большого города"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/little_prince/", "Маленький принц"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/simfonija_severa/", "Симфония севера"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/lebedinoye_ozero/", "Лебединое озеро"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/lunnaya_sonata/", "Лунная соната"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/severnaya_skazka/", "Северная сказка"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/nekrasov/", "Н.А. Некрасов"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/benua/", "Александ Бенуа"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/imperia/", "Империя"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/admiral/", "Гранд Адмирал"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/Jaz_Crown_Jubilee/", "Crown Jubilee"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/Steigenberger_Omar_El_Khayam/", "Omar El Khayam"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/Iberotel_Amara/", "Amara"),
+                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/MS_Century_Paragon/", "Century Paragon ")
+        ));
+//        ConstellationParser.parseDate("25 апр 2025");
     }
 }
