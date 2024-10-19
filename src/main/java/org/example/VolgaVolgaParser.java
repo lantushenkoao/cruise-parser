@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.example.ParserUtils.writeToFile;
+
 public class VolgaVolgaParser {
 
     public static void parseVolgaVolgaCruises(String shipName, List<String> urls) throws Exception {
@@ -24,7 +26,8 @@ public class VolgaVolgaParser {
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
         driver.manage().window().maximize();
-        List<VolgaVolgaData> data = new ArrayList<>();
+        List<ParserUtils.TripData> data = new ArrayList<>();
+        Writer textFile = new OutputStreamWriter(new FileOutputStream("./result.txt"), StandardCharsets.UTF_8);
         try {
 
             for (String url : urls) {
@@ -34,29 +37,29 @@ public class VolgaVolgaParser {
                 List<WebElement> rows = driver.findElements(By.className("product-row"));
                 for (WebElement row : rows) {
 
-                    String stops = row.findElement(By.className("kruiz-ways")).getText()
-                            .replace("\u2013", "_")
-                            .replace(" _ ", "_")
-                            .replace(" - ", "_")
-                            .replace(" + ", "_");
+//                    String stops = row.findElement(By.className("kruiz-ways")).getText()
+//                            .replace("\u2013", "_")
+//                            .replace(" _ ", "_")
+//                            .replace(" - ", "_")
+//                            .replace(" + ", "_");
                     String link = row.findElement(By.xpath("./*[@id='th-info']/a")).getAttribute("href");
-                    VolgaVolgaData dataRow = new VolgaVolgaData();
+                    ParserUtils.TripData dataRow = new ParserUtils.TripData();
                     dataRow.shipName = shipName;
                     dataRow.link = link;
-                    dataRow.stops = stops;
+//                    dataRow.stops = stops;
                     data.add(dataRow);
                 }
             }
             loadCruiseData(data, driver);
-            writeToFile(data);
+            writeToFile(data, textFile);
         }finally {
-
+            textFile.close();
             driver.close();
         }
     }
 
-    private static void loadCruiseData(List<VolgaVolgaData> rows, WebDriver driver) throws Exception {
-        for (VolgaVolgaData row: rows){
+    private static void loadCruiseData(List<ParserUtils.TripData> rows, WebDriver driver) throws Exception {
+        for (ParserUtils.TripData row: rows){
             driver.get(row.link);
             try {
                 String startDate = driver.findElement(By.xpath("//*[contains(text(), 'Отправление теплохода:')]/..")).getText();
@@ -82,31 +85,6 @@ public class VolgaVolgaParser {
         }
     }
 
-    private static void writeToFile(List<VolgaVolgaData> data) throws Exception {
-        Writer textFile = new OutputStreamWriter(new FileOutputStream("./result.txt"), StandardCharsets.UTF_8);
-        try{
-            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-
-            for(VolgaVolgaData row: data) {
-                textFile.write(row.shipName + "\t" + (null == row.startDate ? "пусто" : format.format(row.startDate))
-                        + "\t" + (null == row.endDate ? "пусто" : format.format(row.endDate))
-                        + "\t" + row.cities
-                        + "\t" + row.link
-                        + "\n");
-            }
-        }finally {
-            textFile.close();
-        }
-    }
-
-    private static class VolgaVolgaData {
-        public String shipName;
-        public String stops;
-        public String link;
-        public Date startDate;
-        public Date endDate;
-        public String cities;
-    }
     private static Date parseDate(String date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         String dateTrimmed = date.substring(0, date.indexOf("г.") - 1);

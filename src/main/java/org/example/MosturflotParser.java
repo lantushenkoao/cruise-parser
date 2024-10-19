@@ -15,8 +15,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static org.example.SeleniumUtils.clickButtonIfVisible;
-import static org.example.SeleniumUtils.isElementVisible;
+import static org.example.ParserUtils.clickButtonIfVisible;
+import static org.example.ParserUtils.isElementVisible;
 
 public class MosturflotParser {
     public static void parseMosturflotCruises(String shipName, List<String> urls) throws Exception{
