@@ -19,12 +19,12 @@ import static org.example.ParserUtils.writeToFile;
  * Созвездие
  */
 public class ConstellationParser {
-    public static void parseCruises(List<ShipUrl> ships) throws Exception{
+    public static void parseCruises(List<ParserUtils.ShipUrl> ships) throws Exception{
         Writer textFile = new OutputStreamWriter(new FileOutputStream("./result.txt"), StandardCharsets.UTF_8);
         WebDriver driver = null;
         try{
             driver = ParserUtils.openBrowser();
-            for(ShipUrl ship : ships){
+            for(ParserUtils.ShipUrl ship : ships){
                 driver.get(ship.url);
                 List<WebElement> cruises = driver.findElements(By.xpath("//*[@data-cruise-year]"));
                 List<ParserUtils.TripData> data = new ArrayList<ParserUtils.TripData>();
@@ -73,13 +73,5 @@ public class ConstellationParser {
         return format.parse(dateFormatted);
     }
 
-    public static class ShipUrl{
-        public String url;
-        public String name;
 
-        public ShipUrl(String url, String name) {
-            this.url = url;
-            this.name = name;
-        }
-    }
 }

@@ -17,6 +17,16 @@ import java.util.List;
 
 public class ParserUtils {
 
+    public static class ShipUrl{
+        public String url;
+        public String name;
+
+        public ShipUrl(String url, String name) {
+            this.url = url;
+            this.name = name;
+        }
+    }
+
     public static void writeToFile(List<TripData> data, Writer textFile) throws Exception {
         System.out.println("Writting data to file");
 
@@ -49,8 +59,12 @@ public class ParserUtils {
     }
 
     public static void clickButtonIfVisible(WebDriver driver, By by) {
-        if(isElementVisible(driver, by)){
-            driver.findElement(by).click();
+        try {
+            if(isElementVisible(driver, by)){
+                driver.findElement(by).click();
+            }
+        }catch (Exception e) {
+            System.out.println("Cannot click button " + e.getMessage());
         }
     }
 

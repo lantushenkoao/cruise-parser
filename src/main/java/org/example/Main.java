@@ -17,23 +17,13 @@ public class Main {
 //
 //        parseVolgaVolgaCruises(shipName, urls);
 
-        ConstellationParser.parseCruises(Arrays.asList(
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/Rossia_/", "Россия"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/ogni_bolshogo_goroda/", "Огни большого города"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/little_prince/", "Маленький принц"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/simfonija_severa/", "Симфония севера"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/lebedinoye_ozero/", "Лебединое озеро"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/lunnaya_sonata/", "Лунная соната"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/severnaya_skazka/", "Северная сказка"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/nekrasov/", "Н.А. Некрасов"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/benua/", "Александ Бенуа"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/imperia/", "Империя"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/admiral/", "Гранд Адмирал"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/Jaz_Crown_Jubilee/", "Crown Jubilee"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/Steigenberger_Omar_El_Khayam/", "Omar El Khayam"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/Iberotel_Amara/", "Amara"),
-                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/MS_Century_Paragon/", "Century Paragon ")
-        ));
+        VodohodParser.parseVolgaVolgaCruises(
+                Arrays.asList(
+                        new ParserUtils.ShipUrl("https://vodohod.com/ships/biryusa/", "Бирюса (СВП)")
+                        ));
+//        ConstellationParser.parseCruises(Arrays.asList(
+//                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/lunnaya_sonata/?year=2025#cruisInfo", "Лунная соната")
+//        ));
 //        ConstellationParser.parseDate("25 апр 2025");
     }
 }
