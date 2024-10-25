@@ -31,11 +31,11 @@ public class VodohodParser {
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
         driver.manage().window().maximize();
-        List<ParserUtils.TripData> data = new ArrayList<>();
+
         Writer textFile = new OutputStreamWriter(new FileOutputStream("./result.txt"), StandardCharsets.UTF_8);
         try {
-
             for (ParserUtils.ShipUrl shipUrl : urls) {
+                List<ParserUtils.TripData> data = new ArrayList<>();
                 driver.get(shipUrl.url);
                 System.out.println("Website opened");
                 Thread.sleep(2000);
