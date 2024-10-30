@@ -19,9 +19,7 @@ public class Main {
 
         VodohodParser.parseVolgaVolgaCruises(
                 Arrays.asList(
-                        new ParserUtils.ShipUrl("https://vodohod.com/ships/belinsky/", "Виссарион Белинский"),
-                        new ParserUtils.ShipUrl("https://vodohod.com/ships/fedin/", "Константин Федин"),
-                        new ParserUtils.ShipUrl("https://vodohod.com/ships/kronshtadt/", "Кронштадт")
+                        new ParserUtils.ShipUrl("https://vodohod.com/ships/nnovgorod/", "Нижний Новгород")
                         ));
 //        ConstellationParser.parseCruises(Arrays.asList(
 //                new ConstellationParser.ShipUrl("https://s-cruises.com/ships/lunnaya_sonata/?year=2025#cruisInfo", "Лунная соната")
