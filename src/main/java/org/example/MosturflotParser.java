@@ -19,7 +19,7 @@ import static org.example.ParserUtils.clickButtonIfVisible;
 import static org.example.ParserUtils.isElementVisible;
 
 public class MosturflotParser {
-    public static void parseMosturflotCruises(String shipName, List<String> urls) throws Exception{
+    public static void parseMosturflotCruises(List<ParserUtils.ShipUrl> urls) throws Exception{
         FileWriter textFile = new FileWriter("./result.txt");
         try {
             WebDriver driver;
@@ -29,16 +29,16 @@ public class MosturflotParser {
             driver.manage().window().maximize();
 
             SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-            for (String url : urls) {
-                driver.get(url);
-                System.out.println("Сайт открылся");
+            for (ParserUtils.ShipUrl ship : urls) {
+                driver.get(ship.url);
+                System.out.println("Parsing " + ship.name);
 
                 clickCookiesBtn(driver);
 
-                //нажатие кнопки загрузить еще
+                //??????? ?????? ????????? ???
                 clickMoreButtonWhileVisible(driver);
 
-                //выбираем все круизы на странице
+                //???????? ??? ?????? ?? ????????
                 List<WebElement> elements = driver.findElements(By.className("result__list-item"));
 
                 for (WebElement trip : elements) {
@@ -49,7 +49,7 @@ public class MosturflotParser {
                     String stopsStr = parseMosturflotStops(stops);
                     String link = trip.findElement(By.tagName("a")).getAttribute("href");
 
-                    textFile.write(shipName + "\t" + format.format(dates.startDate)
+                    textFile.write(ship.name + "\t" + format.format(dates.startDate)
                             + "\t" + format.format(dates.endDate)
                             + "\t" + stopsStr
                             + "\t" + link
@@ -68,7 +68,7 @@ public class MosturflotParser {
     }
 
     private static void clickMoreButtonWhileVisible(WebDriver driver) throws InterruptedException {
-        String xpath = "//*[contains(text(),'Загрузить еще')]";
+        String xpath = "//*[contains(text(),'\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C\u0020\u0435\u0449\u0435')]";
         while (isElementVisible(driver, By.xpath(xpath))) {
             driver.findElement(By.xpath(xpath)).click();
             Thread.sleep(2000);
@@ -84,26 +84,26 @@ public class MosturflotParser {
     }
 
     private static Dates parseMosturflotDate(String date) throws ParseException {
-        //мы получим строку вида 02 мая 12:30 (пятница) - 04 мая 22:00 (воскресенье) 2025
-        //3 дня
-        /// 2 ночи
+        //?? ??????? ?????? ???? 02 ??? 12:30 (???????) - 04 ??? 22:00 (???????????) 2025
+        //3 ???
+        /// 2 ????
         String dateStr = date;
-        //удаляем все что идет после 2025
+        //??????? ??? ??? ???? ????? 2025
         dateStr = dateStr.substring(0, dateStr.indexOf("2025")-1);
-        //удаляем дни недели
-        dateStr = dateStr.replace("(понедельник)", "")
-                .replace("(вторник)", "")
-                .replace("(среда)", "")
-                .replace("(четверг)", "")
-                .replace("(пятница)", "")
-                .replace("(суббота)", "")
-                .replace("(воскресенье)", "");
+        //??????? ??? ??????
+        dateStr = dateStr.replace("\u0028\u043F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A\u0029", "")
+                .replace("\u0028\u0432\u0442\u043E\u0440\u043D\u0438\u043A\u0029", "")
+                .replace("\u0028\u0441\u0440\u0435\u0434\u0430\u0029", "")
+                .replace("\u0028\u0447\u0435\u0442\u0432\u0435\u0440\u0433\u0029", "")
+                .replace("\u0028\u043F\u044F\u0442\u043D\u0438\u0446\u0430\u0029", "")
+                .replace("\u0028\u0441\u0443\u0431\u0431\u043E\u0442\u0430\u0029", "")
+                .replace("\u0028\u0432\u043E\u0441\u043A\u0440\u0435\u0441\u0435\u043D\u044C\u0435\u0029", "");
 
-        //разбиваем на дату начала и конца
+        //????????? ?? ???? ?????? ? ?????
         String startDate = dateStr.split("-")[0].trim();
         String endDate = dateStr.split("-")[1].trim();
 
-        //добавляем к датам год
+        //????????? ? ????? ???
         startDate = startDate.substring(0, startDate.length()-5) + " 2025 " + startDate.substring(startDate.length()-5);
         endDate = endDate.substring(0, endDate.length()-5) + " 2025 " + endDate.substring(endDate.length()-5);
         SimpleDateFormat parser = new SimpleDateFormat("dd MMMM yyyy HH:mm",  new Locale("ru"));
@@ -112,7 +112,6 @@ public class MosturflotParser {
         result.endDate = parser.parse(endDate);
         return result;
     }
-
     static class Dates {
         public Date startDate;
         public Date endDate;
