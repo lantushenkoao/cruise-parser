@@ -65,8 +65,7 @@ public class VodohodParser {
 
                 System.out.println("Found " + data.size() + " cruises");
 
-                //TODO: закоментировал это, потому что нужны были только ссылки
-                //loadCruiseData(data, driver);
+                loadCruiseData(data, driver);
                 writeToFile(data, textFile);
             }
 
