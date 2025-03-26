@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        System.setProperty("webdriver.chrome.driver", "geckodriver-v0.35.0-win64\\geckodriver.exe");
+        System.setProperty("webdriver.chrome.driver", "chromedriver-134-win64/chromedriver.exe");
 
 //        CeasarTravel();
 //        WhiteSwan();

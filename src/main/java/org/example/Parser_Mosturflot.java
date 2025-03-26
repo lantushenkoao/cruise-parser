@@ -1,9 +1,8 @@
 package org.example;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -19,11 +18,17 @@ import java.util.Set;
 
 public class Parser_Mosturflot {
     public void Course(String url, String fileName) throws RuntimeException {
-        WebDriver webDriver = new FirefoxDriver();
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--blink-settings=imagesEnabled=false"); // Disable image loading
+
+
+        WebDriver webDriver = new ChromeDriver(options);
+        webDriver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(150));
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(150)); // Implicit wait
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(150));
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
             webDriver.get(url);
-            System.out.println("Okay, let's go");
+            System.out.println("Processing url " + url);
             List<WebElement> allElements = webDriver.findElements(By.cssSelector(".col-12.p-0.col-sm-4.position-relative.h-100 a"));
             for (WebElement element : allElements) {
                 ArrayList<String> date = new ArrayList<>();
@@ -41,9 +46,14 @@ public class Parser_Mosturflot {
                     }
                 }
                 WebElement linkElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a.nav__link[data-id='2']")));
-                ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", linkElement);
-                Thread.sleep(200);
-                linkElement.click();
+//                ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", linkElement);
+//                Thread.sleep(200);
+                ParserUtils.clickButtonIfVisible(webDriver, By.className("button_cookies"));
+                try {
+                    linkElement.click();
+                }catch (ElementClickInterceptedException e){
+                    System.out.println("Unable to click " + e.getMessage());
+                }
 
                 WebElement cruiseNameWeb = webDriver.findElement(By.cssSelector(".detail__card.d-block.d-md-flex.flex-column.align-items-start"));
                 WebElement cruiseNameWebs = cruiseNameWeb.findElement(By.cssSelector(".card-title"));
@@ -86,7 +96,7 @@ public class Parser_Mosturflot {
                 webDriver.switchTo().window(originalTab);
             }
 
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
             System.out.println("All ok");

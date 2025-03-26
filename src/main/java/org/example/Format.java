@@ -35,7 +35,10 @@ public class Format {
         writer.write(String.format("%s\t%s\t%s\t%s\t%s\n", cruiseName, replacedFirstDay, replacedLastDay, replacedDescription,purchaseLink));
     }
     static public void FormatDonInturStopFromTXT(String cruiseName, String purchaseLink, ArrayList<String> city, ArrayList<String> timeIn, ArrayList<String> timeOut, BufferedWriter writer) throws IOException {
-        writer.write(String.format("%s\t%s\t%s\t%s\t%s\n", cruiseName, purchaseLink, city.get(0), timeIn.get(0), timeOut.get(0)));
+        writer.write(String.format("%s\t%s\t%s\t%s\t%s\n", cruiseName, purchaseLink,
+                !city.isEmpty() ? city.getFirst() : "",
+                !timeIn.isEmpty() ? timeIn.getFirst() : "",
+                !timeOut.isEmpty() ? timeOut.getFirst() : ""));
         for(int numberDay = 1; numberDay < city.size() && numberDay < timeIn.size() && numberDay < timeOut.size(); numberDay++){
             writer.write(String.format("\t\t%s\t%s\t%s\n", city.get(numberDay), timeIn.get(numberDay),timeOut.get(numberDay)));
         }
