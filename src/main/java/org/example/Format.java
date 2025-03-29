@@ -68,7 +68,7 @@ public class Format {
             writer.flush();
         }
     }
-    static void FormatMosturflotStopFromTXT(String cruiseName, String purchaseLink,ArrayList<String> timeDay, ArrayList<String> city, ArrayList<String> timeIn, ArrayList<String> timeOut, BufferedWriter writer) throws IOException {
+    static void FormatMosturflotStopFromTXT(String cruiseName, String purchaseLink, List<String> timeDay, ArrayList<String> city, ArrayList<String> timeIn, ArrayList<String> timeOut, BufferedWriter writer) throws IOException {
         int check = 0;
 
         writer.write(String.format("%s\t%s\t%s\t\t%s %s\n", cruiseName, purchaseLink, city.get(0), timeDay.get(0),timeOut.get(0)));

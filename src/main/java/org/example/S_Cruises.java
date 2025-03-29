@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import static org.example.Format.*;
 
 public class S_Cruises {
     public void s_cruises(String url) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("s-cruises.txt",true))){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("s-cruises.txt", true))) {
             List<String> item = new ArrayList<>();
 //            int page = 1;
             String use_url = url;
@@ -25,9 +26,9 @@ public class S_Cruises {
                 Elements cruiseElements = doc.select("div.mt-0.mb-4.lh_1-2.fz_xl");
                 bool = false;
                 int c = 0;
-                for (Element cruise : cruiseElements){
+                for (Element cruise : cruiseElements) {
                     Element linlEl = cruise.selectFirst("a.mb-3");
-                    if(linlEl!=null){
+                    if (linlEl != null) {
                         item.add(linlEl.attr("href"));
                     }
                     c++;
@@ -40,14 +41,14 @@ public class S_Cruises {
 //                    bool = true;
 //                }
 
-            }while (bool);
+            } while (bool);
             String regexCity = "(.*?)\\s*(\\d{1,2}:\\d{2})\\s*-\\s*(\\d{1,2}:\\d{2})";
             String regexDate = "(\\d{2} \\p{IsAlphabetic}+)";
             String regexStart = "(\\p{L}+(?:\\s\\p{L}+)*)(\\s+\\p{L}+)\\s((\\d{1,2}:\\d{2}))";
             Pattern patternStart = Pattern.compile(regexStart);
             Pattern patternDate = Pattern.compile(regexDate);
             Pattern patternCity = Pattern.compile(regexCity);
-            for(String href : item){
+            for (String href : item) {
                 ArrayList<String> date = new ArrayList<>();
                 ArrayList<String> start = new ArrayList<>();
                 ArrayList<String> end = new ArrayList<>();
@@ -66,12 +67,12 @@ public class S_Cruises {
                 Elements scheduleItems = cruiseInfo.children();
                 boolean checkDouble = true;
                 boolean starts = true;
-                for(int i = 0;i<scheduleItems.size();i++){
+                for (int i = 0; i < scheduleItems.size(); i++) {
                     Element it = scheduleItems.get(i);
                     Matcher matcherStart = patternStart.matcher(it.text());
                     Matcher matcherCity = patternCity.matcher(it.text());
-                    if(starts){
-                        if(matcherStart.find()){
+                    if (starts) {
+                        if (matcherStart.find()) {
                             city.add(matcherStart.group(1));
 //                            System.out.println(matcherStart.group(3));
                             start.add(matcherStart.group(3));
@@ -79,11 +80,11 @@ public class S_Cruises {
                             starts = false;
                             continue;
                         }
-                    }else {
+                    } else {
                         matcherStart = patternStart.matcher(it.text());
-                        if(matcherStart.find() && !matcherCity.find()){
-                            if(checkDouble){
-                                date.add(date.get(date.size()-1));
+                        if (matcherStart.find() && !matcherCity.find()) {
+                            if (checkDouble) {
+                                date.add(date.get(date.size() - 1));
                             }
                             city.add(matcherStart.group(1));
                             System.out.println(matcherStart.group(0));
@@ -93,13 +94,13 @@ public class S_Cruises {
                     }
                     matcherCity = patternCity.matcher(it.text());
                     Matcher matcherDate = patternDate.matcher(it.text());
-                    if(matcherDate.find()){
+                    if (matcherDate.find()) {
                         date.add(matcherDate.group(0));
-                            System.out.println(matcherDate.group(1));
+                        System.out.println(matcherDate.group(1));
                         checkDouble = false;
-                    }else if(matcherCity.find()){
-                        if(checkDouble){
-                            date.add(date.get(date.size()-1));
+                    } else if (matcherCity.find()) {
+                        if (checkDouble) {
+                            date.add(date.get(date.size() - 1));
                         }
 //                        System.out.println(matcherCity.group(1));
                         city.add(matcherCity.group(1));
@@ -113,10 +114,30 @@ public class S_Cruises {
                     }
                 }
                 start.add("");
-                FormatMosturflotStopFromTXT(cruiseName,  href,date,  city, end, start, writer);
+                FormatMosturflotStopFromTXT(cruiseName, href,
+                        date.stream().map(S_Cruises::formateDateMonth).toList(),
+                        city, end, start, writer);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    static String formateDateMonth(String in) {
+        String result = in
+                .replace(" \u044f\u043d\u0432\u0430\u0440\u044f", ".01")
+                .replace(" \u0444\u0435\u0432\u0440\u0430\u043b\u044f", ".02")
+                .replace(" \u043c\u0430\u0440\u0442\u0430", ".03")
+                .replace(" \u0430\u043f\u0440\u0435\u043b\u044f", ".04")
+                .replace(" \u043c\u0430\u044f", ".05")
+                .replace(" \u0438\u044e\u043d\u044f", ".06")
+                .replace(" \u0438\u044e\u043b\u044f", ".07")
+                .replace(" \u0430\u0432\u0433\u0443\u0441\u0442\u0430", ".08")
+                .replace(" \u0441\u0435\u043d\u0442\u044f\u0431\u0440\u044f", ".09")
+                .replace(" \u043e\u043a\u0442\u044f\u0431\u0440\u044f", ".10")
+                .replace(" \u043d\u043e\u044f\u0431\u0440\u044f", ".11")
+                .replace(" \u0434\u0435\u043a\u0430\u0431\u0440\u044f", ".12");
+        return result + ".2025";
+
     }
 }

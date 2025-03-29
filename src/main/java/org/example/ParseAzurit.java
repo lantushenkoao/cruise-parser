@@ -29,7 +29,6 @@ public class ParseAzurit {
 
             List<String> hrefs = new ArrayList<>();
             for (WebElement row : rows) {
-                //Извлечение ссылок из строки
                 List<WebElement> links = row.findElements(By.tagName("a"));
                 for (WebElement link : links) {
                     String href = link.getAttribute("href");

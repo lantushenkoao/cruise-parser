@@ -4,6 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.io.BufferedWriter;
@@ -15,11 +17,15 @@ import java.util.Set;
 
 public class Parser_Vodohod {
     public void Course(String url, String fileName) {
-        WebDriver webDriver = new FirefoxDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--blink-settings=imagesEnabled=false"); // Disable image loading
+
+
+        WebDriver webDriver = new ChromeDriver(options);
         Format format = new Format();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName,true))) {
             webDriver.get(url);
-            System.out.println("Okay, let's go");
+            System.out.println("Parsing " + url + " into file: " + fileName);
             List<WebElement> elemets = webDriver.findElements(By.cssSelector(".p-content__inner__wrapper a"));
             for(WebElement elemet : elemets){
                 ArrayList<String> city = new ArrayList<>();

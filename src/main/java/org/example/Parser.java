@@ -6,7 +6,11 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
+
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,7 +19,11 @@ public class Parser {
     public void Course1(String url) {
         System.out.println("Okay, let's go...");
         Format format = new Format();
-        WebDriver webDriver = new FirefoxDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--blink-settings=imagesEnabled=false"); // Disable image loading
+
+
+        WebDriver webDriver = new ChromeDriver(options);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("cruises.txt",true))) {
 
@@ -78,19 +86,20 @@ public class Parser {
 
                         } catch (Exception e) {
                             System.out.println("Error extraction data: " + e.getMessage());
+                            e.printStackTrace();
                         }
                     }
 
                     format.FormatFromTXT(cruiseName, cruiseDescription, cruiseDates, purchaseLink, firstDay, lastDay, writer);
 //
 //
-//                    System.out.println("Название круиза: " + cruiseName);
-//                    System.out.println("Описание круиза: " + cruiseDescription);
-//                    System.out.println("Даты круиза: " + cruiseDates);
-//                    System.out.println("Ссылка на покупку: " + purchaseLink);
-//                    System.out.println("Первый день: " + firstDay);
-//                    System.out.println("Последний день: " + lastDay);
-//                    System.out.println("------------------------------------");
+                    System.out.println("Название круиза: " + cruiseName);
+                    System.out.println("Описание круиза: " + cruiseDescription);
+                    System.out.println("Даты круиза: " + cruiseDates);
+                    System.out.println("Ссылка на покупку: " + purchaseLink);
+                    System.out.println("Первый день: " + firstDay);
+                    System.out.println("Последний день: " + lastDay);
+                    System.out.println("------------------------------------");
 
                     webDriver.close();
                     webDriver.switchTo().window(originalTab);
@@ -108,8 +117,13 @@ public class Parser {
     }
 
     public void Course2(String url,int NumberFile) {
-        System.out.println("Okay, let's go...");
-        WebDriver webDriver = new FirefoxDriver();
+        System.out.println("Parsing " + url + ", file number: " + NumberFile);
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--blink-settings=imagesEnabled=false"); // Disable image loading
+
+
+        WebDriver webDriver = new ChromeDriver(options);
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("cruises"+NumberFile+".txt",true))) {
 
             webDriver.get(url);
@@ -139,17 +153,35 @@ public class Parser {
                     ArrayList<String> city = new ArrayList<>();
                     ArrayList<String> timeIn = new ArrayList<>();
                     ArrayList<String> timeOut = new ArrayList<>();
-                    List<WebElement> routeDays = webDriver.findElements(By.cssSelector(".catalog-element-information-route-day"));
-                    if (!routeDays.isEmpty()) {
-                        try {
-                            for(int numberDay = 1; numberDay<routeDays.size(); numberDay++){
-                                WebElement ToggleLink = routeDays.get(numberDay).findElement(By.className("toggle-link"));
-                                ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", ToggleLink);
-                                Thread.sleep(1500);
 
-                                ToggleLink.click();
-                                ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", ToggleLink);
+                    //List<WebElement> routeDays = webDriver.findElements(By.cssSelector(".catalog-element-information-route-day"));
+
+                    List<WebElement> routeDaysButtons = webDriver.findElements(By.className("toggle-link"));
+
+
+                    if (!routeDaysButtons.isEmpty()) {
+                        try {
+                            //expand всех дней
+                            for (int i = routeDaysButtons.size() - 1; i >= 1; i--) {
+                                WebElement element = routeDaysButtons.get(i);
+
+                                JavascriptExecutor jsExecutor = (JavascriptExecutor) webDriver;
+                                jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+
+                                Thread.sleep(500);
+
+                                Actions actions = new Actions(webDriver);
+                                actions.moveToElement(element).click().perform();
+
                             }
+//                            for(int numberDay = 1; numberDay<routeDays.size(); numberDay++){
+//                                WebElement ToggleLink = routeDays.get(numberDay).findElement(By.className("toggle-link"));
+//                                ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", ToggleLink);
+//                                Thread.sleep(1500);
+//
+//                                ToggleLink.click();
+//                                ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", ToggleLink);
+//                            }
 
                             List<WebElement> FirstElement = webDriver.findElements(By.cssSelector(".catalog-element-information-route-day"));
                             for(WebElement second : FirstElement){
@@ -252,6 +284,7 @@ public class Parser {
                             }
                         } catch (Exception e) {
                             System.out.println("Error extraction data: " + e.getMessage());
+                            e.printStackTrace();
                         }
                     }
 
