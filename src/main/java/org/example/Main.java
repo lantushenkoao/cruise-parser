@@ -148,15 +148,15 @@ public class Main {
         }
     }
 
-    public static void parseDoninturflotSheep(String shipName, int pagesCount, int fileNumber, String url){
+    public static void parseDoninturflotSheep(String shipName, int pagesCount, String url){
         System.out.println("Parsing sheep " + shipName);
         Parser parser = new Parser();
         if(pagesCount == 1){
-            parser.Course2(url, fileNumber);
+            parser.Course2(url, shipName);
             return;
         }
-        for (int numberPage = 1; numberPage < pagesCount; numberPage++) {
-            parser.Course2(url + numberPage, fileNumber);
+        for (int numberPage = 1; numberPage <= pagesCount; numberPage++) {
+            parser.Course2(url + numberPage, shipName);
         }
     }
 
@@ -169,17 +169,17 @@ public class Main {
         //этот парсер пока не определяет автоматически сколько страниц на каждый теплоход ему надо пройти
         //поэтому число рейсов для теплохода надо проставить вручную, в методе calculatePagesCount
 
-        parseDoninturflotSheep("Литвинов", calculatePagesCount(49), 0, "https://doninturflot.com/catalog/ship-maksim_litvinov/?PAGEN_1=");
-        parseDoninturflotSheep("Александра", calculatePagesCount(57), 1, "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-shevthenko_aleksandra/?PAGEN_1=");
-        parseDoninturflotSheep("Чехов", calculatePagesCount(52), 2, "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-anton_chehov/?PAGEN_1=");
-
-        parseDoninturflotSheep("Лавриненков", calculatePagesCount(45), 3, "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-general_lavrinenkov/?PAGEN_1=");
-        parseDoninturflotSheep("Стравинский", calculatePagesCount(36), 4, "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-igor_stravinsky/?PAGEN_1=");
-        parseDoninturflotSheep("Тихий дон", calculatePagesCount(46), 5, "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-tikhiy_don_2024/?PAGEN_1=");
-        parseDoninturflotSheep("ВолгаСтар", calculatePagesCount(54), 6, "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-volga_star/?PAGEN_1=");
-        parseDoninturflotSheep("Бунин", calculatePagesCount(77), 7, "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-ivan_bunin_2024/?PAGEN_1=");
-        parseDoninturflotSheep("Максим Литвинов", calculatePagesCount(49), 8, "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-maksim_litvinov/?PAGEN_1=");
-        parseDoninturflotSheep("Сергей Дягилев", calculatePagesCount(49), 9, "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-sergey_dyagilev/?PAGEN_1=");
+        parseDoninturflotSheep("Litvinov", calculatePagesCount(49), "https://doninturflot.com/catalog/ship-maksim_litvinov/?PAGEN_1=");
+//        parseDoninturflotSheep("Александра", calculatePagesCount(57), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-shevthenko_aleksandra/?PAGEN_1=");
+//        parseDoninturflotSheep("Чехов", calculatePagesCount(52), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-anton_chehov/?PAGEN_1=");
+//
+//        parseDoninturflotSheep("Лавриненков", calculatePagesCount(45), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-general_lavrinenkov/?PAGEN_1=");
+//        parseDoninturflotSheep("Стравинский", calculatePagesCount(36), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-igor_stravinsky/?PAGEN_1=");
+//        parseDoninturflotSheep("Тихий дон", calculatePagesCount(46), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-tikhiy_don_2024/?PAGEN_1=");
+//        parseDoninturflotSheep("ВолгаСтар", calculatePagesCount(54), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-volga_star/?PAGEN_1=");
+//        parseDoninturflotSheep("Бунин", calculatePagesCount(77), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-ivan_bunin_2024/?PAGEN_1=");
+//        parseDoninturflotSheep("Максим Литвинов", calculatePagesCount(49), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-maksim_litvinov/?PAGEN_1=");
+//        parseDoninturflotSheep("Сергей Дягилев", calculatePagesCount(49), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-sergey_dyagilev/?PAGEN_1=");
 
     }
 

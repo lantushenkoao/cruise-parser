@@ -116,15 +116,15 @@ public class Parser {
         }
     }
 
-    public void Course2(String url,int NumberFile) {
-        System.out.println("Parsing " + url + ", file number: " + NumberFile);
+    public void Course2(String url, String sheepName) {
+        System.out.println("Parsing " + url + ", file suffix: " + sheepName);
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--blink-settings=imagesEnabled=false"); // Disable image loading
 
 
         WebDriver webDriver = new ChromeDriver(options);
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("cruises"+NumberFile+".txt",true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("cruises-"+sheepName+".txt",true))) {
 
             webDriver.get(url);
             List<WebElement> cruiseItems = webDriver.findElements(By.cssSelector(".d-flex.flex-wrap.gap-3.justify-content-center"));
@@ -145,7 +145,7 @@ public class Parser {
                             break;
                         }
                     }
-                    Thread.sleep(7000); // Задержка для полной загрузки страницы
+                    Thread.sleep(2000); // Задержка для полной загрузки страницы
 
                     WebElement teplohodItem = webDriver.findElement(By.className("catalog-element-information-teplohod"));
                     String cruiseName = teplohodItem.getText();
@@ -168,28 +168,20 @@ public class Parser {
                                 JavascriptExecutor jsExecutor = (JavascriptExecutor) webDriver;
                                 jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
 
-                                Thread.sleep(500);
+                                Thread.sleep(800);
 
                                 Actions actions = new Actions(webDriver);
                                 actions.moveToElement(element).click().perform();
 
                             }
-//                            for(int numberDay = 1; numberDay<routeDays.size(); numberDay++){
-//                                WebElement ToggleLink = routeDays.get(numberDay).findElement(By.className("toggle-link"));
-//                                ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", ToggleLink);
-//                                Thread.sleep(1500);
-//
-//                                ToggleLink.click();
-//                                ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", ToggleLink);
-//                            }
 
                             List<WebElement> FirstElement = webDriver.findElements(By.cssSelector(".catalog-element-information-route-day"));
                             for(WebElement second : FirstElement){
                                 List<WebElement> elements = second.findElements(By.cssSelector(".toggle-link"));
                                 for (WebElement element : elements) {
-                                    WebElement check = second.findElement(By.cssSelector(".time-table"));
-                                    if(check.getText()==""){
-                                        System.out.println("Problema");
+//                                    WebElement check = second.findElement(By.cssSelector(".time-table"));
+                                    if(element.getText().isEmpty()){
+                                        System.err.println("Time table text not found for url: " );
                                         continue;
                                     }
                                     String temp = element.getText();
@@ -250,32 +242,33 @@ public class Parser {
                                         System.out.println("City: " + par);
                                         for(WebElement spanElement : timeSpan){
                                             String temp1 = spanElement.getText();
-                                            String temp2 = temp1.split("\n")[0];
-                                            String temp3 = temp1.split("\n")[1];
+                                            String[] scheduleRowArray = temp1.split("\n");
+                                            if(scheduleRowArray.length < 2){
+                                                System.err.println("Schedule row is not valid for City " + par + ". May be the row wasnt expanded");
+                                                continue;
+                                            }
+                                            String temp2 = scheduleRowArray[0];
+                                            String temp3 = scheduleRowArray[1];
                                             if (temp2.length() == 13) {
-                                                System.out.println("Start cruise: " + temp3);
                                                 timeOut.add(formattedResult + " " + temp3);
                                                 timeIn.add(" ");
-                                                System.out.println(formattedResult + " " + temp3);
+                                                System.out.println("Start cruise: " + formattedResult + " " + temp3);
                                             }
                                             if (temp2.length() == 8) {
-                                                System.out.println("Input: " + temp3);
                                                 timeIn.add(formattedResult + " " + temp3);
-                                                System.out.println(formattedResult + " " + temp3);
+                                                System.out.println("Arrival: " + formattedResult + " " + temp3);
                                             }
                                             if (temp2.length() == 11) {
                                                 if(temp3.length()==17) {
                                                     city.removeLast();
                                                     continue;
                                                 }
-                                                System.out.println("Output: " + temp3);
                                                 timeOut.add(formattedResult + " " + temp3);
-                                                System.out.println(formattedResult + " " + temp3);
+                                                System.out.println("Departure: " +formattedResult + " " + temp3);
                                             }
                                             if (temp2.length() == 17) {
-                                                System.out.println("End cruise: " + temp3);
                                                 timeIn.add(formattedResult + " " + temp3);
-                                                System.out.println(formattedResult + " " + temp3);
+                                                System.out.println("End cruise: " + formattedResult + " " + temp3);
                                                 timeOut.add(" ");
                                             }
                                         }
