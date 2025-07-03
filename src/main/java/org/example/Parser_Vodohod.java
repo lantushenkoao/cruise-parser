@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static org.example.ParserUtils.clickButtonIfVisible;
+
 public class Parser_Vodohod {
     public void Course(String url, String fileName) {
         ChromeOptions options = new ChromeOptions();
@@ -43,17 +45,24 @@ public class Parser_Vodohod {
                         break;
                     }
                 }
-                Thread.sleep(5000);
-                WebElement button = webDriver.findElement(By.className("b-rc__view-all-btn"));
-                ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", button);
-                ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", button);
-                List<WebElement> check = webDriver.findElements(By.cssSelector(".b-rc__view-all-btn.b-rc__view-all-btn--hide"));
-                while(check.isEmpty()){
-                    System.out.println("search button.....");
-                    ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", button);
-                    check = webDriver.findElements(By.cssSelector(".b-rc__view-all-btn.b-rc__view-all-btn--hide"));
+                WebElement expandWholeTripButton;
+                //иногда показыватся кнопка Показать подробности
+                clickButtonIfVisible(webDriver, By.className("popmechanic-close"));
+                try {
+                    expandWholeTripButton = ParserUtils.waitForElementVisible(webDriver, By.className("b-rc__view-all-btn"));
+                }catch (Exception e){
+                    System.out.println("Элемент Expand b-rc__view-all-btn не найден для маршрута " + strhref);
+                    throw e;
                 }
-                Thread.sleep(1000);
+                ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", expandWholeTripButton);
+                ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", expandWholeTripButton);
+
+                while(!ParserUtils.isElementVisible(webDriver, By.cssSelector(".b-rc__view-all-btn.b-rc__view-all-btn--hide"))){
+                    //кнопка Показать весь круиз иногда не срабатывает. Пока не появилась кнопка Скрыть все, продолжаем попытки её нажать
+                    System.out.println("waiting for collapse button");
+                    ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", expandWholeTripButton);
+                }
+
                 WebElement teplohod = webDriver.findElement(By.cssSelector(".booking__left-item.booking__left-ship"));
                 WebElement pteplohod = teplohod.findElement(By.cssSelector(".booking__i-value"));
                 String nameTeplohod = pteplohod.getText();
@@ -80,34 +89,35 @@ public class Parser_Vodohod {
                             if (temp2.length() == 5) {
                                 temp3 = temp3.split(" ")[0];
                                 timeDay.add(temp3);
-                                System.out.println("Date: " + timeDay.get(condition));
+                                System.out.print(" Date: " + timeDay.get(condition));
                             }
                             if (temp2.length() == 9) {
                                 timeIn.removeLast();
                                 timeIn.addLast(temp3);
-                                System.out.println("timeIn: " + timeIn.get(condition));
+                                System.out.print(" Arrival time: " + timeIn.get(condition));
                             }
                             if (temp2.length() == 12) {
 
                                 timeOut.removeLast();
                                 timeOut.addLast(temp3);
-                                System.out.println("timeOut: " + timeOut.get(condition));
+                                System.out.print(" Departure time: " + timeOut.get(condition));
                             }
+                            System.out.println();
                         }
                         condition++;
                     }
                 }
-                Thread.sleep(3000);
+//                Thread.sleep(3000);
                 format.FormatVodohodStopFromTXT(nameTeplohod, strhref, timeDay, city, timeIn, timeOut, writer);
                 webDriver.close();
                 webDriver.switchTo().window(originalTab);
             }
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (Throwable e) {
+            System.err.println("Failed with error " + e.getMessage() + "; file name " + fileName + "; url " + url);
+            e.printStackTrace();
         } finally {
             webDriver.manage().deleteAllCookies();
             webDriver.quit();
-            System.out.println("Strange, My Lord");
         }
     }
 }

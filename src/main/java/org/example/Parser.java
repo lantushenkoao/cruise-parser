@@ -192,7 +192,7 @@ public class Parser {
 
                                     String dateStr = parts[1].split(",")[0];
                                     String formattedResult = String.format("%s", dateStr);
-                                    List<WebElement> timeSpan = second.findElements(By.cssSelector(".time-table p"));
+                                    List<WebElement> timeTableSpans = second.findElements(By.cssSelector(".time-table p"));
                                     List<WebElement> grid = second.findElements(By.cssSelector(".intec-grid.intec-grid-wrap.intec-grid-i-10"));
                                     if(grid.size()>1){
                                         List<WebElement> intec = second.findElements(By.cssSelector(".intec-grid-item-1.city-name"));
@@ -240,36 +240,42 @@ public class Parser {
                                     } else {
                                         city.add(par);
                                         System.out.println("City: " + par);
-                                        for(WebElement spanElement : timeSpan){
-                                            String temp1 = spanElement.getText();
-                                            String[] scheduleRowArray = temp1.split("\n");
-                                            if(scheduleRowArray.length < 2){
-                                                System.err.println("Schedule row is not valid for City " + par + ". May be the row wasnt expanded");
-                                                continue;
-                                            }
-                                            String temp2 = scheduleRowArray[0];
-                                            String temp3 = scheduleRowArray[1];
-                                            if (temp2.length() == 13) {
-                                                timeOut.add(formattedResult + " " + temp3);
-                                                timeIn.add(" ");
-                                                System.out.println("Start cruise: " + formattedResult + " " + temp3);
-                                            }
-                                            if (temp2.length() == 8) {
-                                                timeIn.add(formattedResult + " " + temp3);
-                                                System.out.println("Arrival: " + formattedResult + " " + temp3);
-                                            }
-                                            if (temp2.length() == 11) {
-                                                if(temp3.length()==17) {
-                                                    city.removeLast();
+                                        if(timeTableSpans.size() == 0){
+                                            //такое может быть если например весь день на воде. Тогда таблица с расписанием будет пустая
+                                            timeIn.add(" ");
+                                            timeOut.add(" ");
+                                        } else {
+                                            for (WebElement spanElement : timeTableSpans) {
+                                                String temp1 = spanElement.getText();
+                                                String[] scheduleRowArray = temp1.split("\n");
+                                                if (scheduleRowArray.length < 2) {
+                                                    System.err.println("Schedule row is not valid for City " + par + ". May be the row wasnt expanded");
                                                     continue;
                                                 }
-                                                timeOut.add(formattedResult + " " + temp3);
-                                                System.out.println("Departure: " +formattedResult + " " + temp3);
-                                            }
-                                            if (temp2.length() == 17) {
-                                                timeIn.add(formattedResult + " " + temp3);
-                                                System.out.println("End cruise: " + formattedResult + " " + temp3);
-                                                timeOut.add(" ");
+                                                String temp2 = scheduleRowArray[0];
+                                                String temp3 = scheduleRowArray[1];
+                                                if (temp2.length() == 13) {
+                                                    timeOut.add(formattedResult + " " + temp3);
+                                                    timeIn.add(" ");
+                                                    System.out.println("Start cruise: " + formattedResult + " " + temp3);
+                                                }
+                                                if (temp2.length() == 8) {
+                                                    timeIn.add(formattedResult + " " + temp3);
+                                                    System.out.println("Arrival: " + formattedResult + " " + temp3);
+                                                }
+                                                if (temp2.length() == 11) {
+                                                    if (temp3.length() == 17) {
+                                                        city.removeLast();
+                                                        continue;
+                                                    }
+                                                    timeOut.add(formattedResult + " " + temp3);
+                                                    System.out.println("Departure: " + formattedResult + " " + temp3);
+                                                }
+                                                if (temp2.length() == 17) {
+                                                    timeIn.add(formattedResult + " " + temp3);
+                                                    System.out.println("End cruise: " + formattedResult + " " + temp3);
+                                                    timeOut.add(" ");
+                                                }
                                             }
                                         }
                                     }

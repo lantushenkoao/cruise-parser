@@ -3,6 +3,7 @@ package org.example;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,6 +16,11 @@ import java.util.Date;
 import java.util.List;
 
 public class ParserUtils {
+
+    public static WebElement waitForElementVisible(WebDriver driver, By by){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20)); // 10-second timeout
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+    }
 
     public static boolean isElementVisible(WebDriver driver, By by) {
         try{

@@ -16,9 +16,9 @@ public class Main {
 //        volgaPlace();
 //        sCruises();
 //        mosturFlot();
-//        vodohod();
-        doninturflot();
-//        gamma();
+//          vodohod();
+//        doninturflot();
+        gamma();
         //sCruises();
     }
     static public void CeasarTravel(){
@@ -161,25 +161,28 @@ public class Main {
     }
 
     //подразумевает что на одной странице до 20 строк
-    public static int calculatePagesCount(int itemsCount) {
+    public static int calculatePagesCountWhen20RecordsPerPage(int itemsCount) {
         return (itemsCount + 20 - 1) / 20;
+    }
+    public static int calculatePagesCountWhen10RecordsPerPage(int itemsCount) {
+        return (itemsCount + 10 - 1) / 10;
     }
 
     static public void doninturflot(){
         //этот парсер пока не определяет автоматически сколько страниц на каждый теплоход ему надо пройти
         //поэтому число рейсов для теплохода надо проставить вручную, в методе calculatePagesCount
 
-        parseDoninturflotSheep("Litvinov", calculatePagesCount(49), "https://doninturflot.com/catalog/ship-maksim_litvinov/?PAGEN_1=");
-//        parseDoninturflotSheep("Александра", calculatePagesCount(57), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-shevthenko_aleksandra/?PAGEN_1=");
-//        parseDoninturflotSheep("Чехов", calculatePagesCount(52), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-anton_chehov/?PAGEN_1=");
-//
-//        parseDoninturflotSheep("Лавриненков", calculatePagesCount(45), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-general_lavrinenkov/?PAGEN_1=");
-//        parseDoninturflotSheep("Стравинский", calculatePagesCount(36), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-igor_stravinsky/?PAGEN_1=");
-//        parseDoninturflotSheep("Тихий дон", calculatePagesCount(46), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-tikhiy_don_2024/?PAGEN_1=");
-//        parseDoninturflotSheep("ВолгаСтар", calculatePagesCount(54), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-volga_star/?PAGEN_1=");
-//        parseDoninturflotSheep("Бунин", calculatePagesCount(77), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-ivan_bunin_2024/?PAGEN_1=");
-//        parseDoninturflotSheep("Максим Литвинов", calculatePagesCount(49), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-maksim_litvinov/?PAGEN_1=");
-//        parseDoninturflotSheep("Сергей Дягилев", calculatePagesCount(49), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-sergey_dyagilev/?PAGEN_1=");
+        parseDoninturflotSheep("Litvinov", calculatePagesCountWhen20RecordsPerPage(49), "https://doninturflot.com/catalog/ship-maksim_litvinov/?PAGEN_1=");
+        parseDoninturflotSheep("Alexandra", calculatePagesCountWhen20RecordsPerPage(57), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-shevthenko_aleksandra/?PAGEN_1=");
+        parseDoninturflotSheep("Chehov", calculatePagesCountWhen20RecordsPerPage(52), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-anton_chehov/?PAGEN_1=");
+
+        parseDoninturflotSheep("Lavrinenkon", calculatePagesCountWhen20RecordsPerPage(45), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-general_lavrinenkov/?PAGEN_1=");
+        parseDoninturflotSheep("Stravinsky", calculatePagesCountWhen20RecordsPerPage(36), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-igor_stravinsky/?PAGEN_1=");
+        parseDoninturflotSheep("TihyiDon", calculatePagesCountWhen20RecordsPerPage(46), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-tikhiy_don_2024/?PAGEN_1=");
+        parseDoninturflotSheep("VolgaStar", calculatePagesCountWhen20RecordsPerPage(54), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-volga_star/?PAGEN_1=");
+        parseDoninturflotSheep("Bunin", calculatePagesCountWhen20RecordsPerPage(77), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-ivan_bunin_2024/?PAGEN_1=");
+        parseDoninturflotSheep("MaximLitvinov", calculatePagesCountWhen20RecordsPerPage(49), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-maksim_litvinov/?PAGEN_1=");
+        parseDoninturflotSheep("SergeyDagilev", calculatePagesCountWhen20RecordsPerPage(49), "https://doninturflot.com/catalog/date-from-01.01.2025-to-31.12.2025/ship-sergey_dyagilev/?PAGEN_1=");
 
     }
 
@@ -196,245 +199,51 @@ public class Main {
         }
         tasks.add(task);
     }
-
+    static void addVodohodShipToTasks(List<String[]> tasks, String shipName, int pagesCount, String url) {
+        String folderName = "vodohod";
+        for (int pageNumber = 1; pageNumber <= pagesCount; pageNumber++) {
+            String[] task = new String[]{
+                    url + pageNumber,
+                    folderName+ "/vodohod-" + shipName + pageNumber +".txt"
+            };
+            tasks.add(task);
+        }
+    }
     static public void vodohod(){
-        int table = 0;
         Parser_Vodohod vodohodParser = new Parser_Vodohod();
-        String folderName = "vodohod"; //Create folder before start parser
         List<String[]> tasks = new ArrayList<>();
 
-        //СВП
-        for (int numberPage = 1; numberPage <= 3; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_705853973=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y" +numberPage,
-                    folderName+ "/vodohod-SBP.txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-//        Александр Пушкин
-        for (int numberPage = 1; numberPage <= 2; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?set_filter=y&arrFilter_33_2737816558=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=#anchor-cruises-list" +numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
+//        addVodohodShipToTasks(tasks, "Birusa[SVP]", calculatePagesCountWhen10RecordsPerPage(17), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_705853973=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+        addVodohodShipToTasks(tasks, "Pushkin", calculatePagesCountWhen10RecordsPerPage(23), "https://vodohod.com/cruises/?set_filter=y&arrFilter_33_2737816558=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "AlexanderRadishev", calculatePagesCountWhen10RecordsPerPage(41), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_281082452=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "AlexanderSuvorov", calculatePagesCountWhen10RecordsPerPage(50), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_609249036=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "VissarionBelinsky", calculatePagesCountWhen10RecordsPerPage(122), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_1294049986=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "GeorgyZukov", calculatePagesCountWhen10RecordsPerPage(52), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3176740534=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "GeorgyChicherin", calculatePagesCountWhen10RecordsPerPage(71), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_2755790839=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "ZosimaShaskov", calculatePagesCountWhen10RecordsPerPage(48), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_1413124995=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//
+//
+//        addVodohodShipToTasks(tasks, "KonstantinKorotkov", calculatePagesCountWhen10RecordsPerPage(35), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_2311695342=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "KonstantinSimonov", calculatePagesCountWhen10RecordsPerPage(25), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_427210367=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "KonstantinFedin", calculatePagesCountWhen10RecordsPerPage(238), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3442721337=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "Krondshtat", calculatePagesCountWhen10RecordsPerPage(179), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3559453560=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "LevTolstoy", calculatePagesCountWhen10RecordsPerPage(31), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_4188233569=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "Lenin", calculatePagesCountWhen10RecordsPerPage(42), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_1741146818=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "LeonidSobolev", calculatePagesCountWhen10RecordsPerPage(47), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_591242005=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "MaximGorky", calculatePagesCountWhen10RecordsPerPage(17), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_1852933865=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "MichailFrunze", calculatePagesCountWhen10RecordsPerPage(44), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3395159584=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "MstislavRostropovich", calculatePagesCountWhen10RecordsPerPage(53), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_975606356=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "MustayKarim", calculatePagesCountWhen10RecordsPerPage(43), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_2262374431=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "NiznyNovgorod", calculatePagesCountWhen10RecordsPerPage(38), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_2393141239=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "NikolaiZarkov", calculatePagesCountWhen10RecordsPerPage(30), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3165157610=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "NikolayChernishev", calculatePagesCountWhen10RecordsPerPage(36), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_4274953080=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "Rus", calculatePagesCountWhen10RecordsPerPage(30), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3124032175=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "StPeterburg", calculatePagesCountWhen10RecordsPerPage(34), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3035593373=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "SemenBudeny", calculatePagesCountWhen10RecordsPerPage(100), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3286780427=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "SergeyKuchkin", calculatePagesCountWhen10RecordsPerPage(100), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3544528737=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "FelixDzerzhinsky", calculatePagesCountWhen10RecordsPerPage(42), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3478905690=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
+//        addVodohodShipToTasks(tasks, "YuriAndropov", calculatePagesCountWhen10RecordsPerPage(64), "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_2281869357=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y&PAGEN_1=");
 
-        for (int numberPage = 1; numberPage <= 3; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_281082452=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y" + "&PAGEN_1="+numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <= 3; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_609249036=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <= 3; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_1294049986=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        //Жуков
-        for (int numberPage = 1; numberPage <= 3; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3176740534=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <= 8; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_2755790839=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        //Созима
-        for (int numberPage = 1; numberPage <= 5; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_1413124995=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <= 4; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_2311695342=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            tasks.add(task);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <= 3; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_427210367=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <= 6; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3442721337=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <= 11; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3559453560=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            tasks.add(task);
-            table++;
-        }
-
-        for (int numberPage = 1; numberPage <= 3; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_4188233569=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        //Ленин
-        for (int numberPage = 1; numberPage <=4; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_1741146818=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=5; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_591242005=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=2; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_1852933865=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=4; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3395159584=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=3; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_975606356=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=4; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_2262374431=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        //Нижний новогород
-        for (int numberPage = 1; numberPage <=4; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_2393141239=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=2; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3165157610=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=3; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_4274953080=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=3; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3124032175=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=4; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3035593373=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=4; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3286780427=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=5; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3544528737=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=4; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_3478905690=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
-        for (int numberPage = 1; numberPage <=7; numberPage++) {
-            String[] task = new String[]{
-                    "https://vodohod.com/cruises/?&set_filter=y&arrFilter_33_2281869357=Y&arrFilter_8_MIN=01.01.2025&arrFilter_8_MAX=31.12.2025&arrFilter_566_3838745332=Y"+  "&PAGEN_1="+ numberPage,
-                    folderName+ "/vodohod"+ Integer.toString(table) +".txt"
-            };
-            addTask(tasks, task, table);
-            table++;
-        }
         ExecutorService executorService = Executors.newFixedThreadPool(3);
 //
         for (String[] task : tasks) {
